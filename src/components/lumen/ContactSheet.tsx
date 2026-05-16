@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   LUMEN_EMAIL,
   LUMEN_MAILTO_URL,
-  LUMEN_PHONE_DISPLAY,
   LUMEN_WHATSAPP_URL,
 } from "@/lib/contact";
 import { Mail } from "lucide-react";
@@ -56,7 +55,7 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => (
             className="tap flex items-center justify-center gap-3 w-full h-14 rounded-2xl bg-[#25D366] text-white font-semibold text-[15px]"
           >
             <WhatsAppIcon className="h-6 w-6" />
-            {LUMEN_PHONE_DISPLAY}
+            فتح واتساب
           </a>
         </TabsContent>
 

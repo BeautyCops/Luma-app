@@ -4,7 +4,7 @@ import w1 from "@/assets/worker-1.jpg";
 import w2 from "@/assets/worker-2.jpg";
 import w3 from "@/assets/worker-3.jpg";
 import { Clock, Shield, SparkleFilled, ArrowLeft, Calendar, Star, Check, Chat, Plus, Minus } from "./icons";
-import { LUMEN_PHONE_DISPLAY, LUMEN_TEL_URL, LUMEN_WHATSAPP_URL } from "@/lib/contact";
+import { LUMEN_TEL_URL, LUMEN_WHATSAPP_URL } from "@/lib/contact";
 import { useState } from "react";
 
 export const HomeScreen = ({ onBook, onServices }: { onBook: () => void; onServices: () => void }) => {
@@ -319,22 +319,20 @@ export const HomeScreen = ({ onBook, onServices }: { onBook: () => void; onServi
               <p className="text-[12.5px] text-white/70 mt-2 leading-relaxed max-w-[34ch]">
                 فريق الدعم متاح ٢٤/٧ للإجابة على استفساراتك ومساعدتك خطوة بخطوة.
               </p>
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-4 flex gap-2">
                 <a
                   href={LUMEN_WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="tap inline-flex flex-col items-center justify-center min-h-10 px-4 py-2 rounded-xl bg-white text-[#0B0F1C] text-[12.5px] font-semibold"
+                  className="tap h-10 px-4 rounded-xl bg-white text-[#0B0F1C] text-[12.5px] font-semibold inline-flex items-center justify-center"
                 >
-                  <span>محادثة فورية</span>
-                  <span className="text-[11px] font-medium opacity-80 mt-0.5">{LUMEN_PHONE_DISPLAY}</span>
+                  محادثة فورية
                 </a>
                 <a
                   href={LUMEN_TEL_URL}
-                  className="tap inline-flex flex-col items-center justify-center min-h-10 px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 text-white text-[12.5px] font-semibold"
+                  className="tap h-10 px-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 text-white text-[12.5px] font-semibold inline-flex items-center justify-center"
                 >
-                  <span>اتصلي بنا</span>
-                  <span className="text-[11px] font-medium text-white/80 mt-0.5">{LUMEN_PHONE_DISPLAY}</span>
+                  اتصلي بنا
                 </a>
               </div>
             </div>
