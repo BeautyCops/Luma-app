@@ -1,0 +1,18 @@
+---
+description: Push commits directly to GitHub main; no pull requests
+alwaysApply: true
+---
+
+# Git — direct push to GitHub
+
+After completing meaningful work (features, fixes, or file imports the user requested):
+
+1. **Do not open pull requests** unless the user explicitly asks for a PR.
+2. **Push directly** to the remote default branch (usually `main`):
+   - `git status` and `git diff` to review changes
+   - **Never commit** `.env`, credentials, or secrets (ensure `.env` stays in `.gitignore`)
+   - Stage, commit with a clear message, then `git push origin main` (or `git push` if upstream is set)
+3. If push fails (auth, rejected non-fast-forward), fix or report clearly; do not force-push `main` unless the user explicitly requests it.
+4. Only create commits when there are real changes; skip empty commits.
+
+Remote for this project: `https://github.com/BeautyCops/Luma-app.git`
