@@ -12,9 +12,8 @@ export const HomeScreen = ({ onBook, onServices }: { onBook: () => void; onServi
     <div className="space-y-8 pb-32 lg:pb-16 lg:space-y-16 lg:px-10 lg:pt-2">
       {/* Hero */}
       <section className="px-5 pt-6 lg:px-0">
-        <div className="relative overflow-hidden rounded-[28px] border border-hairline shadow-pop noise bg-[#0B0F1C] lg:grid lg:grid-cols-2 lg:min-h-[min(520px,56vh)]">
-          {/* خلفية */}
-          <div className="pointer-events-none absolute inset-0" aria-hidden>
+        <div className="relative overflow-hidden rounded-[28px] border border-hairline shadow-pop noise bg-[#0B0F1C]">
+          <div className="absolute inset-0">
             <img
               src={heroBg}
               alt=""
@@ -23,29 +22,36 @@ export const HomeScreen = ({ onBook, onServices }: { onBook: () => void; onServi
               width={1024}
               height={1280}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F1C]/30 via-transparent to-[#0B0F1C]" />
-            <div className="absolute inset-y-0 right-0 hidden w-[55%] bg-gradient-to-l from-[#0B0F1C] via-[#0B0F1C]/90 to-transparent lg:block lg:w-[52%]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F1C] via-[#0B0F1C]/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-l from-[#0B0F1C]/75 via-[#0B0F1C]/20 to-transparent lg:from-[#0B0F1C]/85" />
           </div>
 
-          <div className="relative z-10 flex flex-col px-6 pt-7 pb-6 lg:justify-center lg:px-12 lg:py-12">
-            <div className="inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 mb-4 bg-white/10 backdrop-blur-md border border-white/15">
-              <SparkleFilled className="h-3 w-3 shrink-0 text-gold" />
+          <img
+            src={heroWorkers}
+            alt="فريق لومن"
+            className="absolute bottom-0 left-1/2 z-[1] h-[58%] w-auto max-w-[90%] -translate-x-1/2 object-contain object-bottom bg-transparent drop-shadow-[0_24px_48px_rgba(0,0,0,0.45)] pointer-events-none select-none lg:left-0 lg:max-w-[52%] lg:translate-x-0 lg:h-[94%]"
+            width={992}
+            height={984}
+          />
+
+          <div className="relative z-10 flex min-h-[460px] flex-col px-6 pb-7 pt-7 lg:min-h-[560px] lg:max-w-[55%] lg:px-14 lg:pb-14 lg:pt-14">
+            <div className="inline-flex items-center gap-2 self-start rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur-md mb-5">
+              <SparkleFilled className="h-3 w-3 text-gold" />
               <span className="text-[11px] tracking-wide text-white/90">خدمة موثوقة • متاحة يومياً</span>
             </div>
 
-            <h2 className="max-w-[14ch] text-[28px] font-semibold leading-[1.2] tracking-tight text-white sm:text-[32px] lg:max-w-none lg:text-[48px] lg:leading-[1.12]">
-              عاملة منزلية{" "}
-              <span className="gold-gradient-text block sm:inline">بالساعة</span>
+            <h2 className="text-[30px] font-semibold leading-[1.15] tracking-tight text-white lg:text-[52px]">
+              عاملة منزلية <span className="gold-gradient-text">بالساعة</span>
             </h2>
-            <p className="mt-3 max-w-[32ch] text-[14px] leading-relaxed text-white/70 lg:mt-4 lg:text-[17px]">
+            <p className="mt-3 max-w-[40ch] text-[14px] leading-relaxed text-white/70 lg:mt-5 lg:text-[17px]">
               خدمة موثوقة، في الوقت اللي يناسبك.
             </p>
 
-            <div className="mt-6 flex gap-2 lg:mt-8">
+            <div className="relative z-20 mt-auto flex gap-2 pt-8">
               <button
                 type="button"
                 onClick={onBook}
-                className="tap flex-1 h-14 rounded-2xl bg-gradient-gold text-primary-foreground font-semibold tracking-tight shadow-glow flex items-center justify-center gap-2"
+                className="tap flex h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-gold font-semibold tracking-tight text-primary-foreground shadow-glow"
               >
                 احجزي الآن
                 <ArrowLeft className="h-5 w-5 rotate-180" />
@@ -53,26 +59,12 @@ export const HomeScreen = ({ onBook, onServices }: { onBook: () => void; onServi
               <button
                 type="button"
                 onClick={onServices}
-                className="tap h-14 w-14 shrink-0 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-white flex items-center justify-center"
+                className="tap flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-white backdrop-blur-md"
                 aria-label="الخدمات"
               >
                 <Calendar className="h-5 w-5" />
               </button>
             </div>
-          </div>
-
-          <div className="relative z-[1] flex min-h-[200px] items-end justify-center px-2 pt-2 pb-0 sm:min-h-[220px] lg:min-h-0 lg:px-4 lg:pt-8">
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0B0F1C] to-transparent lg:hidden"
-              aria-hidden
-            />
-            <img
-              src={heroWorkers}
-              alt="فريق لومن"
-              className="relative h-[220px] w-auto max-w-[95%] object-contain object-bottom bg-transparent drop-shadow-[0_20px_40px_rgba(0,0,0,0.35)] select-none sm:h-[250px] lg:h-[min(440px,90%)] lg:max-w-full"
-              width={992}
-              height={984}
-            />
           </div>
         </div>
       </section>
