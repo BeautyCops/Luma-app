@@ -1,9 +1,8 @@
--- Run in Supabase → SQL Editor after creating a user (Auth → Users or sign up in the app).
--- Replace YOUR_USER_UUID with the user's id from Authentication → Users.
+-- لوحة الإدارة في التطبيق مربوطة بالبريد: r.s.althobaiti@gmail.com
+-- لصلاحيات قاعدة البيانات (RLS) أضفي أيضاً صفاً في user_roles:
 
 insert into public.user_roles (user_id, role)
-values ('YOUR_USER_UUID', 'admin')
+select id, 'admin'::public.app_role
+from auth.users
+where lower(email) = lower('r.s.althobaiti@gmail.com')
 on conflict do nothing;
-
--- Verify:
--- select * from public.user_roles where role = 'admin';

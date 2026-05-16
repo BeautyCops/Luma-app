@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { isSupabaseConfigured } from "@/integrations/supabase/client";
 import { Chat, Shield, SparkleFilled, User } from "./icons";
 
 export const AccountScreen = () => {
@@ -12,8 +11,6 @@ export const AccountScreen = () => {
     (typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : null) ||
     user?.email?.split("@")[0] ||
     "ضيف";
-
-  const loginHref = isAdmin ? "/auth?intent=admin" : "/auth?intent=customer";
 
   return (
     <div className="pb-32 space-y-6">
@@ -32,13 +29,7 @@ export const AccountScreen = () => {
           <div className="flex-1 min-w-0">
             <div className="text-[15px] font-semibold truncate">{user ? displayName : "ضيف"}</div>
             <div className="text-[12px] text-muted-ink truncate">
-              {loading
-                ? "..."
-                : user
-                  ? user.email
-                  : isSupabaseConfigured
-                    ? "سجّلي للحصول على تجربة كاملة"
-                    : "المصادقة غير مفعّلة على الخادم"}
+              {loading ? "..." : user ? user.email : "سجّلي للحصول على تجربة كاملة"}
             </div>
           </div>
           {user ? (
@@ -52,7 +43,7 @@ export const AccountScreen = () => {
           ) : (
             <button
               type="button"
-              onClick={() => navigate(loginHref)}
+              onClick={() => navigate("/auth")}
               className="tap h-10 px-4 rounded-xl bg-foreground text-background text-[12.5px] font-semibold"
             >
               دخول

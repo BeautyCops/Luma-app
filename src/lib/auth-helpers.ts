@@ -1,26 +1,20 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
+/** الحساب الوحيد المصرّح له بلوحة الإدارة */
+export const ADMIN_EMAIL = "r.s.althobaiti@gmail.com";
+
 export type Profile = {
   full_name: string | null;
   phone: string | null;
 };
 
-export async function fetchIsAdmin(userId: string): Promise<boolean> {
-  const { data: viaRpc, error: rpcError } = await supabase.rpc("has_role", {
-    _user_id: userId,
-    _role: "admin",
-  });
-  if (!rpcError && viaRpc === true) return true;
+export function isAdminEmail(email: string | null | undefined): boolean {
+  return email?.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
+}
 
-  const { data: row } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId)
-    .eq("role", "admin")
-    .maybeSingle();
-
-  return !!row;
+export function isAdminUser(user: User | null | undefined): boolean {
+  return !!user && isAdminEmail(user.email);
 }
 
 export async function fetchProfile(userId: string): Promise<Profile | null> {
@@ -30,10 +24,7 @@ export async function fetchProfile(userId: string): Promise<Profile | null> {
     .eq("id", userId)
     .maybeSingle();
 
-  if (error) {
-    console.warn("[Lumen] profile fetch:", error.message);
-    return null;
-  }
+  if (error) return null;
   return data;
 }
 
@@ -63,5 +54,6 @@ export function authErrorMessage(message: string): string {
   if (m.includes("email not confirmed")) return "يرجى تأكيد البريد الإلكتروني من الرابط المرسل إليك";
   if (m.includes("user already registered")) return "هذا البريد مسجّل مسبقاً — جرّبي تسجيل الدخول";
   if (m.includes("password")) return "كلمة المرور ضعيفة — استخدمي 6 أحرف على الأقل";
-  return message;
+  if (m.includes("network") || m.includes("fetch")) return "تعذّر الاتصال، حاولي لاحقاً";
+  return "حدث خطأ، حاولي مرة أخرى";
 }

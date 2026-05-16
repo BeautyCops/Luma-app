@@ -28,7 +28,7 @@ export const AdminLayout = () => {
   }
 
   if (!user) {
-    return <Navigate to="/auth?intent=admin" state={{ from: location }} replace />;
+    return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
   if (!isAdmin) {
@@ -37,9 +37,7 @@ export const AdminLayout = () => {
         <div className="max-w-md text-center glass-strong rounded-3xl p-8 shadow-pop">
           <div className="text-[11px] uppercase tracking-[0.22em] text-gold mb-2">صلاحيات محدودة</div>
           <h1 className="text-2xl font-semibold tracking-tight mb-3">ليس لديك صلاحية الوصول</h1>
-          <p className="text-sm text-muted-ink mb-6">
-            هذا الحساب ليس له صلاحيات أدمن. تواصل مع المدير ليمنحك الصلاحية.
-          </p>
+          <p className="text-sm text-muted-ink mb-6">لا يمكن الوصول إلى هذه الصفحة.</p>
           <div className="flex gap-2 justify-center">
             <Button variant="outline" onClick={() => signOut()}>تسجيل الخروج</Button>
             <Button asChild><a href="/">الرئيسية</a></Button>

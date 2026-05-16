@@ -85,7 +85,7 @@ const AdminLink = () => {
   if (user) return null;
   return (
     <Link
-      to="/auth?intent=customer"
+      to="/auth"
       className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium text-muted-ink ring-1 ring-hairline hover:text-foreground ease-soft"
     >
       دخول

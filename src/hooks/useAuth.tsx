@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { isSupabaseConfigured, supabase } from "@/integrations/supabase/client";
-import { fetchIsAdmin, fetchProfile, type Profile } from "@/lib/auth-helpers";
+import { fetchProfile, isAdminUser, type Profile } from "@/lib/auth-helpers";
 
 type AuthContextValue = {
   user: User | null;
@@ -28,8 +28,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsAdmin(false);
       return;
     }
-    const [admin, prof] = await Promise.all([fetchIsAdmin(u.id), fetchProfile(u.id)]);
-    setIsAdmin(admin);
+    setIsAdmin(isAdminUser(u));
+    const prof = await fetchProfile(u.id);
     setProfile(prof);
   }, []);
 
