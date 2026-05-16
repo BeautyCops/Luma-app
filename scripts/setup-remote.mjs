@@ -15,7 +15,16 @@ const dbPassword = process.env.SUPABASE_DB_PASSWORD;
 const accessToken = process.env.SUPABASE_ACCESS_TOKEN;
 
 if (!url || !serviceKey) {
-  console.error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in GitHub secrets");
+  console.error(`
+GitHub Secrets غير مضبوطة بعد.
+من Supabase → Project Settings → API انسخي:
+  SUPABASE_URL
+  SUPABASE_SERVICE_ROLE_KEY (service_role)
+  SUPABASE_PROJECT_ID
+  SUPABASE_DB_PASSWORD (من Database settings)
+ثم GitHub → Luma-app → Settings → Secrets and variables → Actions → New repository secret
+أو شغّلي Workflow يدوياً بعد الإضافة: Actions → Setup Supabase → Run workflow
+`);
   process.exit(1);
 }
 

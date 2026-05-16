@@ -2,8 +2,9 @@
   command = "npm run build"
   publish = "dist"
 
-# Supabase + GitHub يضيفان غالباً: SUPABASE_URL و SUPABASE_ANON_KEY
-# أو عيّني يدوياً: VITE_SUPABASE_URL و VITE_SUPABASE_PUBLISHABLE_KEY
+[build.environment]
+  SUPABASE_URL = "https://riuiyhdcxzmnppqlyjpf.supabase.co"
+  SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpdWl5aGRjeHptbnBwcWx5anBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzM1MDYsImV4cCI6MjA5Mzg0OTUwNn0.aUvgDdLLTXudR7kfek1h5yYOfURPkI7mCHq5YWngWNk"
 
 [[redirects]]
   from = "/*"
