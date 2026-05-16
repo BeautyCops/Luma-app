@@ -27,13 +27,13 @@ export const HomeScreen = ({ onBook, onServices }: { onBook: () => void; onServi
             <div className="absolute inset-0 bg-gradient-to-l from-[#0B0F1C]/70 via-transparent to-transparent" />
           </div>
 
-          {/* Workers image — anchored bottom, balanced */}
+          {/* Workers image — transparent PNG, anchored to bottom */}
           <img
             src={heroWorkers}
             alt="فريق لومن"
-            className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[62%] w-auto object-contain object-bottom drop-shadow-2xl pointer-events-none select-none lg:left-0 lg:translate-x-0 lg:h-[95%]"
-            width={1024}
-            height={1024}
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[62%] w-auto max-w-[92%] object-contain object-bottom object-center bg-transparent drop-shadow-[0_24px_48px_rgba(0,0,0,0.45)] pointer-events-none select-none lg:left-auto lg:right-0 lg:translate-x-0 lg:h-[92%] lg:max-w-[58%]"
+            width={992}
+            height={984}
           />
 
           <div className="relative px-6 pt-7 pb-7 min-h-[480px] lg:min-h-[560px] lg:px-14 lg:pt-14 lg:pb-14 lg:max-w-[55%] flex flex-col">
