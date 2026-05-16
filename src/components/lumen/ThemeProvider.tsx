@@ -3,12 +3,13 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 type Theme = "dark" | "light";
 type Ctx = { theme: Theme; toggle: () => void };
 
-const ThemeCtx = createContext<Ctx>({ theme: "dark", toggle: () => {} });
+const ThemeCtx = createContext<Ctx>({ theme: "light", toggle: () => {} });
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === "undefined") return "dark";
-    return (localStorage.getItem("lumen-theme") as Theme) || "dark";
+    if (typeof window === "undefined") return "light";
+    const stored = localStorage.getItem("lumen-theme") as Theme | null;
+    return stored === "dark" || stored === "light" ? stored : "light";
   });
 
   useEffect(() => {
