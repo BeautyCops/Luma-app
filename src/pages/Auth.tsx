@@ -26,6 +26,15 @@ const Auth = () => {
     else navigate("/?tab=account", { replace: true });
   }, [user, loading, isAdmin, navigate]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("type") === "signup" || window.location.hash.includes("access_token")) {
+      toast.success("تم تأكيد بريدك — يمكنك تسجيل الدخول");
+      setMode("signin");
+      window.history.replaceState({}, "", "/auth");
+    }
+  }, []);
+
   const afterAuth = (authUser: User) => {
     toast.success(mode === "signup" ? "تم إنشاء الحساب!" : "تم تسجيل الدخول");
     if (isAdminUser(authUser)) navigate("/admin", { replace: true });

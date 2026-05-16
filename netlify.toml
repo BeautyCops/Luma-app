@@ -2,9 +2,17 @@
   command = "npm run build"
   publish = "dist"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# مشروع لومن المستقل (vsjlhvzoowulfcmcqjqm) — ليس Lovable
+# أضيفي في Netlify → Environment: SUPABASE_SERVICE_ROLE_KEY (سري)
 [build.environment]
-  SUPABASE_URL = "https://riuiyhdcxzmnppqlyjpf.supabase.co"
-  SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpdWl5aGRjeHptbnBwcWx5anBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzM1MDYsImV4cCI6MjA5Mzg0OTUwNn0.aUvgDdLLTXudR7kfek1h5yYOfURPkI7mCHq5YWngWNk"
+  SUPABASE_URL = "https://vsjlhvzoowulfcmcqjqm.supabase.co"
+  SUPABASE_ANON_KEY = "sb_publishable_R6ZAUNkE0jg8J6pfL2olOA_I03wWG9d"
+  VITE_SUPABASE_URL = "https://vsjlhvzoowulfcmcqjqm.supabase.co"
+  VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_R6ZAUNkE0jg8J6pfL2olOA_I03wWG9d"
 
 [[redirects]]
   from = "/*"

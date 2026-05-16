@@ -51,7 +51,8 @@ export async function upsertProfile(
 export function authErrorMessage(message: string): string {
   const m = message.toLowerCase();
   if (m.includes("invalid login credentials")) return "البريد أو كلمة المرور غير صحيحة";
-  if (m.includes("email not confirmed")) return "تعذّر تسجيل الدخول — حاولي مرة أخرى";
+  if (m.includes("email not confirmed"))
+    return "تحققي من بريدك أو عطّلي تأكيد البريد في إعدادات المشروع";
   if (m.includes("user already registered")) return "هذا البريد مسجّل مسبقاً — جرّبي تسجيل الدخول";
   if (m.includes("weak") || m.includes("easy to guess"))
     return "كلمة المرور ضعيفة جداً — اختاري كلمة أقوى";

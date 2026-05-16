@@ -1,7 +1,10 @@
 const token = process.env.NETLIFY_AUTH_TOKEN;
 const siteId = process.env.NETLIFY_SITE_ID;
-const url = process.env.SUPABASE_URL;
-const anon = process.env.SUPABASE_ANON_KEY;
+const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+const anon =
+  process.env.SUPABASE_ANON_KEY ||
+  process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!token || !siteId || !url || !anon) {
   console.log("[netlify] skip — missing NETLIFY_AUTH_TOKEN, NETLIFY_SITE_ID, or Supabase vars");
@@ -14,6 +17,7 @@ const vars = [
   { key: "VITE_SUPABASE_URL", value: url },
   { key: "VITE_SUPABASE_PUBLISHABLE_KEY", value: anon },
 ];
+if (service) vars.push({ key: "SUPABASE_SERVICE_ROLE_KEY", value: service });
 
 for (const { key, value } of vars) {
   const res = await fetch(`https://api.netlify.com/api/v1/sites/${siteId}/env/${key}`, {

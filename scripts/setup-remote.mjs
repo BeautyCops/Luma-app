@@ -60,6 +60,13 @@ async function patchAuth() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      site_url: process.env.LUMEN_SITE_URL || "https://lumen-service.netlify.app",
+      uri_allow_list: [
+        "https://lumen-service.netlify.app/**",
+        "https://lumen-service.netlify.app/auth",
+        "http://localhost:5173/**",
+        "http://localhost:8080/**",
+      ].join(","),
       mailer_autoconfirm: true,
       security_hibp_enabled: false,
     }),
