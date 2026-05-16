@@ -2,11 +2,9 @@
   command = "npm run build"
   publish = "dist"
 
-[build.environment]
-  VITE_SUPABASE_URL = "https://riuiyhdcxzmnppqlyjpf.supabase.co"
-  VITE_SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpdWl5aGRjeHptbnBwcWx5anBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzM1MDYsImV4cCI6MjA5Mzg0OTUwNn0.aUvgDdLLTXudR7kfek1h5yYOfURPkI7mCHq5YWngWNk"
+# أضيفي في Netlify → Site configuration → Environment variables:
+# VITE_SUPABASE_URL و VITE_SUPABASE_PUBLISHABLE_KEY من مشروعك في Supabase
 
-# SPA — React Router
 [[redirects]]
   from = "/*"
   to = "/index.html"
