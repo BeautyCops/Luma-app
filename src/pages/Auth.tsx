@@ -50,9 +50,11 @@ const Auth = () => {
 
     setBusy(true);
     try {
+      const normalizedEmail = email.trim().toLowerCase();
+
       if (mode === "signup") {
         const { user: newUser } = await signUpAndEnter({
-          email,
+          email: normalizedEmail,
           password,
           fullName,
           phone,
@@ -60,7 +62,7 @@ const Auth = () => {
         afterAuth(newUser);
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email: email.trim(),
+          email: normalizedEmail,
           password,
         });
         if (error) throw error;

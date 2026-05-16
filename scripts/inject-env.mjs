@@ -42,3 +42,18 @@ if (projectId) lines.push(`VITE_SUPABASE_PROJECT_ID=${projectId}`);
 
 writeFileSync(".env.production.local", lines.join("\n") + "\n", "utf8");
 console.log("[inject-env] تم تجهيز .env.production.local للبناء");
+
+const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+if (serviceKey) {
+  const runtime = {
+    SUPABASE_URL: url,
+    SUPABASE_ANON_KEY: key,
+    SUPABASE_SERVICE_ROLE_KEY: serviceKey,
+  };
+  writeFileSync("netlify/functions/.runtime-env.json", JSON.stringify(runtime), "utf8");
+  console.log("[inject-env] تم تجهيز Netlify Functions (تسجيل فوري)");
+} else {
+  console.warn(
+    "[inject-env] أضيفي SUPABASE_SERVICE_ROLE_KEY في Netlify → Environment variables (Builds + Functions)",
+  );
+}

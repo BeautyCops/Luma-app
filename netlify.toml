@@ -7,7 +7,8 @@
   node_bundler = "esbuild"
 
 # مشروع لومن المستقل (vsjlhvzoowulfcmcqjqm) — ليس Lovable
-# أضيفي في Netlify → Environment: SUPABASE_SERVICE_ROLE_KEY (سري)
+# مطلوب في Netlify → Environment variables (Builds + Functions):
+#   SUPABASE_SERVICE_ROLE_KEY = legacy service_role JWT (eyJ...)
 [build.environment]
   SUPABASE_URL = "https://vsjlhvzoowulfcmcqjqm.supabase.co"
   SUPABASE_ANON_KEY = "sb_publishable_R6ZAUNkE0jg8J6pfL2olOA_I03wWG9d"

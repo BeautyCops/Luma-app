@@ -99,7 +99,12 @@ if (userId) {
   console.log("تم ربط الصلاحيات في profiles و user_roles");
 }
 
-console.log("جاهز — سجّلي الدخول بكلمة المرور:", ADMIN_PASSWORD);
+console.log("جاهز — سجّلي الدخول:");
+console.log("  البريد:", ADMIN_EMAIL);
+console.log("  كلمة المرور:", ADMIN_PASSWORD);
+console.log(
+  "\nعلى Netlify أضيفي نفس SUPABASE_SERVICE_ROLE_KEY في Environment (Builds + Functions) ثم أعيدي النشر.",
+);
 console.log(
   "لتسجيل فوري بدون تأكيد بريد: Supabase → Authentication → Email → عطّلي Confirm email",
 );

@@ -52,10 +52,16 @@ async function signUpViaRegister({
   fullName,
   phone,
 }: SignUpFields): Promise<{ user: User; session: Session | null }> {
+  const normalizedEmail = email.trim().toLowerCase();
   const res = await fetch("/.netlify/functions/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password, fullName, phone }),
+    body: JSON.stringify({
+      email: normalizedEmail,
+      password,
+      fullName,
+      phone,
+    }),
   });
 
   let data: RegisterOk | RegisterErr;
@@ -83,7 +89,7 @@ async function signUpViaRegister({
 
   if (data.needsSignIn) {
     const { data: signInData, error } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
+      email: normalizedEmail,
       password,
     });
     if (error) throw error;
@@ -102,7 +108,7 @@ async function signUpDirect({
   fullName,
   phone,
 }: SignUpFields): Promise<{ user: User; session: Session | null }> {
-  const trimmedEmail = email.trim();
+  const trimmedEmail = email.trim().toLowerCase();
 
   const { data, error } = await supabase.auth.signUp({
     email: trimmedEmail,

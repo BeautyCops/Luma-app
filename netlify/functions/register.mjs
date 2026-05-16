@@ -1,8 +1,25 @@
 /**
  * تسجيل مستخدم جديد مع تأكيد فوري للبريد (بدون رسالة Lovable).
- * يتطلب SUPABASE_SERVICE_ROLE_KEY في متغيرات Netlify (سري، ليس للمتصفح).
+ * يتطلب SUPABASE_SERVICE_ROLE_KEY (Netlify UI أو يُولَّد عند البناء عبر inject-env).
  */
 import { createClient } from "@supabase/supabase-js";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+function loadRuntimeEnv() {
+  const path = join(__dirname, ".runtime-env.json");
+  if (!existsSync(path)) return {};
+  try {
+    return JSON.parse(readFileSync(path, "utf8"));
+  } catch {
+    return {};
+  }
+}
+
+const runtime = loadRuntimeEnv();
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -22,8 +39,9 @@ export async function handler(event) {
   if (event.httpMethod === "OPTIONS") return { statusCode: 204, headers: cors, body: "" };
   if (event.httpMethod !== "POST") return json(405, { error: "method_not_allowed" });
 
-  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const url =
+    process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || runtime.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || runtime.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) {
     return json(503, { error: "auth_not_configured" });
   }
@@ -52,7 +70,26 @@ export async function handler(event) {
   const { data: list } = await admin.auth.admin.listUsers({ perPage: 200 });
   const existing = list?.users?.find((u) => u.email?.toLowerCase() === email);
 
+  const anonKey =
+    process.env.SUPABASE_ANON_KEY ||
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.VITE_SUPABASE_ANON_KEY ||
+    runtime.SUPABASE_ANON_KEY;
+
+  const publicClient = createClient(url, anonKey);
+
   if (existing) {
+    const { data: signIn, error: signInError } = await publicClient.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (!signInError && signIn.session) {
+      return json(200, {
+        ok: true,
+        session: signIn.session,
+        user: signIn.user,
+      });
+    }
     return json(409, { error: "user_already_registered" });
   }
 
@@ -80,12 +117,6 @@ export async function handler(event) {
     });
   }
 
-  const anonKey =
-    process.env.SUPABASE_ANON_KEY ||
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.VITE_SUPABASE_ANON_KEY;
-
-  const publicClient = createClient(url, anonKey);
   const { data: signIn, error: signInError } = await publicClient.auth.signInWithPassword({
     email,
     password,
