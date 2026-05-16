@@ -68,16 +68,27 @@ export const TopBar = ({
 };
 
 const AdminLink = () => {
-  const { isAdmin } = useAuth();
-  if (!isAdmin) return null;
+  const { user, isAdmin, loading } = useAuth();
+  if (loading) return null;
+  if (isAdmin) {
+    return (
+      <Link
+        to="/admin"
+        className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium text-gold ring-1 ring-gold/30 hover:bg-gold/10 ease-soft"
+        aria-label="لوحة الإدارة"
+      >
+        <LayoutDashboard className="h-3.5 w-3.5" />
+        الإدارة
+      </Link>
+    );
+  }
+  if (user) return null;
   return (
     <Link
-      to="/admin"
-      className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium text-gold ring-1 ring-gold/30 hover:bg-gold/10 ease-soft"
-      aria-label="لوحة الإدارة"
+      to="/auth?intent=customer"
+      className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium text-muted-ink ring-1 ring-hairline hover:text-foreground ease-soft"
     >
-      <LayoutDashboard className="h-3.5 w-3.5" />
-      الإدارة
+      دخول
     </Link>
   );
 };

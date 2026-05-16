@@ -28,7 +28,7 @@ export const AdminLayout = () => {
   }
 
   if (!user) {
-    return <Navigate to="/auth" state={{ from: location }} replace />;
+    return <Navigate to="/auth?intent=admin" state={{ from: location }} replace />;
   }
 
   if (!isAdmin) {

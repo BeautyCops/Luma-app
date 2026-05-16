@@ -1,11 +1,27 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { isSupabaseConfigured } from "@/integrations/supabase/client";
 import { Chat, Shield, SparkleFilled, User } from "./icons";
 
 export const AccountScreen = () => {
+  const navigate = useNavigate();
+  const { user, profile, isAdmin, loading, signOut } = useAuth();
+
+  const displayName =
+    profile?.full_name ||
+    (typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : null) ||
+    user?.email?.split("@")[0] ||
+    "ضيف";
+
+  const loginHref = isAdmin ? "/auth?intent=admin" : "/auth?intent=customer";
+
   return (
     <div className="pb-32 space-y-6">
       <div className="px-5 pt-2">
         <div className="text-[11px] uppercase tracking-[0.22em] text-gold mb-2">حسابي</div>
-        <h2 className="text-[26px] font-semibold tracking-tight">مرحباً بك</h2>
+        <h2 className="text-[26px] font-semibold tracking-tight">
+          {user ? `مرحباً، ${displayName}` : "مرحباً بك"}
+        </h2>
       </div>
 
       <div className="px-5">
@@ -13,14 +29,45 @@ export const AccountScreen = () => {
           <div className="h-14 w-14 rounded-full bg-gradient-gold grid place-items-center shadow-glow">
             <User className="h-6 w-6 text-primary-foreground" />
           </div>
-          <div className="flex-1">
-            <div className="text-[15px] font-semibold">ضيف</div>
-            <div className="text-[12px] text-muted-ink">سجّلي للحصول على تجربة كاملة</div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[15px] font-semibold truncate">{user ? displayName : "ضيف"}</div>
+            <div className="text-[12px] text-muted-ink truncate">
+              {loading
+                ? "..."
+                : user
+                  ? user.email
+                  : isSupabaseConfigured
+                    ? "سجّلي للحصول على تجربة كاملة"
+                    : "المصادقة غير مفعّلة على الخادم"}
+            </div>
           </div>
-          <button className="tap h-10 px-4 rounded-xl bg-foreground text-background text-[12.5px] font-semibold">
-            دخول
-          </button>
+          {user ? (
+            <button
+              type="button"
+              onClick={() => signOut()}
+              className="tap h-10 px-4 rounded-xl border border-hairline text-[12.5px] font-semibold"
+            >
+              خروج
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => navigate(loginHref)}
+              className="tap h-10 px-4 rounded-xl bg-foreground text-background text-[12.5px] font-semibold"
+            >
+              دخول
+            </button>
+          )}
         </div>
+
+        {user && isAdmin && (
+          <Link
+            to="/admin"
+            className="mt-3 flex items-center justify-center gap-2 w-full tap h-11 rounded-xl bg-gold/10 text-gold text-[13px] font-semibold ring-1 ring-gold/30"
+          >
+            لوحة الإدارة
+          </Link>
+        )}
       </div>
 
       <div className="px-5">
@@ -31,7 +78,7 @@ export const AccountScreen = () => {
             { Icon: Chat, t: "الدعم", s: "تواصلي معنا في أي وقت" },
             { Icon: SparkleFilled, t: "عن لومن", s: "قصتنا ورؤيتنا" },
           ].map(({ Icon, t, s }) => (
-            <button key={t} className="tap w-full p-4 flex items-center gap-3 text-right">
+            <button key={t} type="button" className="tap w-full p-4 flex items-center gap-3 text-right">
               <div className="h-9 w-9 rounded-xl bg-gold/10 text-gold grid place-items-center">
                 <Icon className="h-4.5 w-4.5" />
               </div>

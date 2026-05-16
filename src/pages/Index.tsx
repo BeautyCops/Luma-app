@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ThemeProvider } from "@/components/lumen/ThemeProvider";
 import { TopBar } from "@/components/lumen/TopBar";
 import { BottomNav, type Tab } from "@/components/lumen/BottomNav";
@@ -8,9 +9,17 @@ import { BookingScreen } from "@/components/lumen/BookingScreen";
 import { BookingsScreen } from "@/components/lumen/BookingsScreen";
 import { AccountScreen } from "@/components/lumen/AccountScreen";
 
+const TAB_VALUES: Tab[] = ["home", "services", "bookings", "account"];
+
 const Index = () => {
+  const [searchParams] = useSearchParams();
   const [tab, setTab] = useState<Tab>("home");
   const [booking, setBooking] = useState(false);
+
+  useEffect(() => {
+    const t = searchParams.get("tab");
+    if (t && TAB_VALUES.includes(t as Tab)) setTab(t as Tab);
+  }, [searchParams]);
 
   const goBook = () => setBooking(true);
 
