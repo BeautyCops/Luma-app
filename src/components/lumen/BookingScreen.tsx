@@ -1,5 +1,9 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { ArrowLeft, Check, Shield, SparkleFilled, Clock } from "./icons";
+import { useAuth } from "@/hooks/useAuth";
+import { BOOKING_PRICE, createBooking } from "@/lib/bookings";
 
 const arNum = (n: number) => n.toLocaleString("ar-EG");
 const dayNames = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
@@ -12,27 +16,63 @@ type ShiftId = "morning" | "evening" | "night";
 const shifts: { id: ShiftId; label: string; range: string; from: string; to: string }[] = [
   { id: "morning", label: "الفترة الصباحية", range: "١٠ ص – ١ م", from: "10:00", to: "13:00" },
   { id: "evening", label: "الفترة المسائية", range: "٢ م – ٥ م", from: "14:00", to: "17:00" },
-  { id: "night",   label: "الفترة الليلية",  range: "٦ م – ٩ م", from: "18:00", to: "21:00" },
+  { id: "night", label: "الفترة الليلية", range: "٦ م – ٩ م", from: "18:00", to: "21:00" },
 ];
 
-export const BookingScreen = ({ onBack }: { onBack: () => void }) => {
+export const BookingScreen = ({
+  onBack,
+  onSuccess,
+}: {
+  onBack: () => void;
+  onSuccess?: () => void;
+}) => {
+  const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
   const today = new Date();
-  const [step, setStep] = useState<1 | 2>(1);
-  const [selectedDay, setSelectedDay] = useState<number>(today.getDate());
-  const [selectedShift, setSelectedShift] = useState<ShiftId>("morning");
-  const [done, setDone] = useState(false);
-
   const days = useMemo(() => {
     return Array.from({ length: 14 }, (_, i) => {
       const d = new Date();
+      d.setHours(12, 0, 0, 0);
       d.setDate(today.getDate() + i);
       return d;
     });
-  }, []);
+  }, [today.getDate(), today.getMonth(), today.getFullYear()]);
 
-  const PRICE = 90;
-  const HOURS = 3;
+  const [step, setStep] = useState<1 | 2>(1);
+  const [selectedDate, setSelectedDate] = useState<Date>(days[0]);
+  const [selectedShift, setSelectedShift] = useState<ShiftId>("morning");
+  const [done, setDone] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
   const activeShift = shifts.find((s) => s.id === selectedShift)!;
+
+  const confirmBooking = async () => {
+    if (!user) {
+      toast.error("سجّلي الدخول لإتمام الحجز");
+      navigate("/auth");
+      return;
+    }
+
+    setSubmitting(true);
+    const result = await createBooking({
+      bookingDate: selectedDate,
+      bookingTime: activeShift.from,
+      shiftLabel: activeShift.label,
+    });
+    setSubmitting(false);
+
+    if (!result.ok) {
+      if (result.code === "not_signed_in") {
+        toast.error(result.message);
+        navigate("/auth");
+        return;
+      }
+      toast.error(result.message);
+      return;
+    }
+
+    setDone(true);
+  };
 
   if (done) {
     return (
@@ -43,13 +83,17 @@ export const BookingScreen = ({ onBack }: { onBack: () => void }) => {
         </div>
         <h2 className="mt-6 text-[26px] font-semibold tracking-tight">تم تأكيد الحجز</h2>
         <p className="mt-2 text-muted-ink text-[14px] max-w-[28ch]">
-          سنرسل لك تفاصيل الموعد قبل الزيارة بـ ٣٠ دقيقة.
+          تم حفظ حجزك. سنرسل لك تفاصيل الموعد قبل الزيارة بـ ٣٠ دقيقة.
         </p>
         <button
-          onClick={onBack}
+          type="button"
+          onClick={() => {
+            onSuccess?.();
+            onBack();
+          }}
           className="tap mt-8 h-12 px-6 rounded-2xl bg-gradient-gold text-primary-foreground font-semibold"
         >
-          العودة للرئيسية
+          عرض حجوزاتي
         </button>
       </div>
     );
@@ -57,7 +101,6 @@ export const BookingScreen = ({ onBack }: { onBack: () => void }) => {
 
   return (
     <div className="pb-40">
-      {/* Header */}
       <div className="px-5 pt-2 flex items-center justify-between">
         <button onClick={onBack} className="tap h-10 w-10 rounded-full glass grid place-items-center">
           <ArrowLeft className="h-5 w-5 rotate-180" />
@@ -68,7 +111,14 @@ export const BookingScreen = ({ onBack }: { onBack: () => void }) => {
         <div className="h-10 w-10" />
       </div>
 
-      {/* Progress */}
+      {!user && !authLoading && (
+        <div className="px-5 mt-3">
+          <div className="rounded-2xl border border-gold/30 bg-gold/5 px-4 py-3 text-[12.5px] text-foreground/90">
+            سجّلي الدخول لحفظ الحجز في حسابك ومتابعته من «حجوزاتي».
+          </div>
+        </div>
+      )}
+
       <div className="px-5 mt-4 flex gap-1.5">
         {[1, 2].map((i) => (
           <span
@@ -86,21 +136,20 @@ export const BookingScreen = ({ onBack }: { onBack: () => void }) => {
         </h2>
         <p className="text-[13px] text-muted-ink mt-1">
           {step === 1
-            ? `${monthNames[today.getMonth()]} ${arNum(today.getFullYear())}`
+            ? `${monthNames[selectedDate.getMonth()]} ${arNum(selectedDate.getFullYear())}`
             : "كل فترة ٣ ساعات بسعر ثابت"}
         </p>
       </div>
 
-      {/* STEP 1 — Date only */}
       {step === 1 && (
         <div className="mt-6 overflow-x-auto px-5 -mx-5">
           <div className="flex gap-2 px-5">
             {days.map((d) => {
-              const isSel = d.getDate() === selectedDay;
+              const isSel = d.toDateString() === selectedDate.toDateString();
               return (
                 <button
                   key={d.toISOString()}
-                  onClick={() => setSelectedDay(d.getDate())}
+                  onClick={() => setSelectedDate(d)}
                   className={`tap shrink-0 w-[64px] h-[88px] rounded-2xl flex flex-col items-center justify-center border ease-soft ${
                     isSel
                       ? "bg-foreground text-background border-foreground shadow-pop"
@@ -118,7 +167,6 @@ export const BookingScreen = ({ onBack }: { onBack: () => void }) => {
         </div>
       )}
 
-      {/* STEP 2 — Shift selection */}
       {step === 2 && (
         <div className="px-5 mt-6 space-y-3">
           {shifts.map((s) => {
@@ -128,14 +176,14 @@ export const BookingScreen = ({ onBack }: { onBack: () => void }) => {
                 key={s.id}
                 onClick={() => setSelectedShift(s.id)}
                 className={`tap w-full text-right rounded-2xl border p-4 flex items-center gap-4 ease-soft ${
-                  isSel
-                    ? "border-gold bg-gold/5 shadow-pop"
-                    : "border-hairline glass"
+                  isSel ? "border-gold bg-gold/5 shadow-pop" : "border-hairline glass"
                 }`}
               >
-                <div className={`h-12 w-12 rounded-xl grid place-items-center ${
-                  isSel ? "bg-gradient-gold text-primary-foreground" : "bg-secondary text-foreground/70"
-                }`}>
+                <div
+                  className={`h-12 w-12 rounded-xl grid place-items-center ${
+                    isSel ? "bg-gradient-gold text-primary-foreground" : "bg-secondary text-foreground/70"
+                  }`}
+                >
                   <Clock className="h-5 w-5" />
                 </div>
                 <div className="flex-1">
@@ -144,7 +192,7 @@ export const BookingScreen = ({ onBack }: { onBack: () => void }) => {
                 </div>
                 <div className="text-left">
                   <div className={`text-[16px] font-semibold ${isSel ? "gold-gradient-text" : ""}`}>
-                    {arNum(PRICE)}
+                    {arNum(BOOKING_PRICE)}
                   </div>
                   <div className="text-[10px] text-muted-ink -mt-0.5">ر.س</div>
                 </div>
@@ -168,7 +216,7 @@ export const BookingScreen = ({ onBack }: { onBack: () => void }) => {
           <div className="surface-card p-4 flex items-center justify-between">
             <div>
               <div className="text-[12px] text-muted-ink">المجموع</div>
-              <div className="text-[20px] font-semibold mt-0.5">{arNum(PRICE)} ر.س</div>
+              <div className="text-[20px] font-semibold mt-0.5">{arNum(BOOKING_PRICE)} ر.س</div>
             </div>
             <div className="text-left">
               <div className="text-[12px] text-muted-ink">الفترة</div>
@@ -178,18 +226,23 @@ export const BookingScreen = ({ onBack }: { onBack: () => void }) => {
         </div>
       )}
 
-      {/* Sticky CTA */}
       <div className="fixed md:absolute bottom-24 inset-x-0 z-40 px-5 pointer-events-none">
         <div className="mx-auto max-w-md pointer-events-auto">
           <button
+            type="button"
+            disabled={submitting || authLoading}
             onClick={() => {
               if (step < 2) setStep(2);
-              else setDone(true);
+              else void confirmBooking();
             }}
-            className="tap w-full h-14 rounded-2xl bg-gradient-gold text-primary-foreground font-semibold shadow-glow flex items-center justify-center gap-2"
+            className="tap w-full h-14 rounded-2xl bg-gradient-gold text-primary-foreground font-semibold shadow-glow flex items-center justify-center gap-2 disabled:opacity-60"
           >
-            {step < 2 ? "متابعة" : `تأكيد الحجز · ${arNum(PRICE)} ر.س`}
-            <ArrowLeft className="h-5 w-5" />
+            {submitting
+              ? "جاري الحفظ..."
+              : step < 2
+                ? "متابعة"
+                : `تأكيد الحجز · ${arNum(BOOKING_PRICE)} ر.س`}
+            {!submitting && <ArrowLeft className="h-5 w-5" />}
           </button>
         </div>
       </div>

@@ -25,7 +25,7 @@ function authRedirectUrl(): string {
   if (typeof window !== "undefined") {
     return `${window.location.origin}/auth`;
   }
-  return "https://lumen-service.netlify.app/auth";
+  return "/auth";
 }
 
 function mapRegisterError(code: string): Error {

@@ -6,9 +6,14 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-# مشروع لومن المستقل (vsjlhvzoowulfcmcqjqm) — ليس Lovable
-# مطلوب في Netlify → Environment variables (Builds + Functions):
-#   SUPABASE_SERVICE_ROLE_KEY = legacy service_role JWT (eyJ...)
+# مشروع لومن: vsjlhvzoowulfcmcqjqm
+#
+# بعد ربط حساب Netlify جديد (نفس GitHub):
+# 1) Site configuration → Environment variables → Add variable
+#    SUPABASE_SERVICE_ROLE_KEY = legacy JWT service_role (يبدأ بـ eyJ...) — ليس sb_secret_
+#    Scopes: Production + Deploy previews + Branch deploys + Functions
+# 2) Trigger deploy → Deploy site (أو ادفعي commit جديد إلى main)
+# 3) Supabase → Authentication → URL Configuration → Site URL = رابط Netlify الجديد
 [build.environment]
   SUPABASE_URL = "https://vsjlhvzoowulfcmcqjqm.supabase.co"
   SUPABASE_ANON_KEY = "sb_publishable_R6ZAUNkE0jg8J6pfL2olOA_I03wWG9d"

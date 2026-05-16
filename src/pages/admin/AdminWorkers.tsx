@@ -101,6 +101,12 @@ export const AdminWorkers = () => {
       />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {rows.length === 0 && (
+          <Card className="p-6 col-span-full border-dashed text-center text-sm text-muted-ink">
+            لا توجد عاملات في قاعدة البيانات. من الطرفية: <code className="text-xs">npm run seed:data</code>
+            {" "}أو نفّذي <code className="text-xs">supabase/seed.sql</code> في Supabase SQL Editor.
+          </Card>
+        )}
         {rows.map((w) => (
           <Card key={w.id} className="p-5 border-hairline">
             <div className="flex items-start justify-between mb-3">

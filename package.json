@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "setup:supabase": "node scripts/setup-admin.mjs"
+    "setup:supabase": "node scripts/setup-admin.mjs",
+    "seed:data": "node scripts/seed-data.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

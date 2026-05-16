@@ -45,7 +45,13 @@ const Index = () => {
 
           <div key={booking ? "book" : tab} className="animate-rise">
             {booking ? (
-              <BookingScreen onBack={() => setBooking(false)} />
+              <BookingScreen
+                onBack={() => setBooking(false)}
+                onSuccess={() => {
+                  setBooking(false);
+                  setTab("bookings");
+                }}
+              />
             ) : tab === "home" ? (
               <HomeScreen onBook={goBook} onServices={() => setTab("services")} />
             ) : tab === "services" ? (
