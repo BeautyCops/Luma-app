@@ -51,7 +51,7 @@ const Index = () => {
             ) : tab === "services" ? (
               <ServicesScreen onBook={goBook} />
             ) : tab === "bookings" ? (
-              <BookingsScreen />
+              <BookingsScreen onBook={goBook} />
             ) : (
               <AccountScreen />
             )}

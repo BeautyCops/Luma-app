@@ -13,6 +13,7 @@ import { AdminBookings } from "./pages/admin/AdminBookings.tsx";
 import { AdminWorkers } from "./pages/admin/AdminWorkers.tsx";
 import { AdminServices } from "./pages/admin/AdminServices.tsx";
 import { AdminCustomers } from "./pages/admin/AdminCustomers.tsx";
+import { AdminUsers } from "./pages/admin/AdminUsers.tsx";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
               <Route index element={<AdminOverview />} />
               <Route path="bookings" element={<AdminBookings />} />
               <Route path="workers" element={<AdminWorkers />} />
+              <Route path="users" element={<AdminUsers />} />
               <Route path="services" element={<AdminServices />} />
               <Route path="customers" element={<AdminCustomers />} />
             </Route>

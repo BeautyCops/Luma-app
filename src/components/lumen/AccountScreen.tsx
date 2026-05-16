@@ -1,10 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Chat, Shield, SparkleFilled, User } from "./icons";
+import { InfoPageSheet } from "./InfoPageSheet";
+import { INFO_PAGES, type InfoPageId } from "@/content/info-pages";
+
+const menuItems: { id: InfoPageId; Icon: typeof Shield; t: string; s: string }[] = [
+  { id: "security", Icon: Shield, t: "الأمان والتأمين", s: "تعرفي على ضمانات الخدمة" },
+  { id: "support", Icon: Chat, t: "الدعم", s: "تواصلي معنا في أي وقت" },
+  { id: "about", Icon: SparkleFilled, t: "عن لومن", s: "قصتنا ورؤيتنا" },
+];
 
 export const AccountScreen = () => {
   const navigate = useNavigate();
   const { user, profile, isAdmin, loading, signOut } = useAuth();
+  const [infoPage, setInfoPage] = useState<InfoPageId | null>(null);
 
   const displayName =
     profile?.full_name ||
@@ -64,12 +74,13 @@ export const AccountScreen = () => {
       <div className="px-5">
         <div className="text-[12px] text-muted-ink mb-3">عام</div>
         <div className="surface-card divide-y divide-hairline overflow-hidden">
-          {[
-            { Icon: Shield, t: "الأمان والتأمين", s: "تعرفي على ضمانات الخدمة" },
-            { Icon: Chat, t: "الدعم", s: "تواصلي معنا في أي وقت" },
-            { Icon: SparkleFilled, t: "عن لومن", s: "قصتنا ورؤيتنا" },
-          ].map(({ Icon, t, s }) => (
-            <button key={t} type="button" className="tap w-full p-4 flex items-center gap-3 text-right">
+          {menuItems.map(({ id, Icon, t, s }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setInfoPage(id)}
+              className="tap w-full p-4 flex items-center gap-3 text-right hover:bg-foreground/[0.02]"
+            >
               <div className="h-9 w-9 rounded-xl bg-gold/10 text-gold grid place-items-center">
                 <Icon className="h-4.5 w-4.5" />
               </div>
@@ -86,6 +97,12 @@ export const AccountScreen = () => {
       <div className="px-5 text-center text-[11px] text-muted-ink pt-4">
         Lumen v1.0 — صُنع بعناية في السعودية
       </div>
+
+      <InfoPageSheet
+        page={infoPage ? INFO_PAGES[infoPage] : null}
+        onClose={() => setInfoPage(null)}
+        showContactCta={infoPage === "support"}
+      />
     </div>
   );
 };

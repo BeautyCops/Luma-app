@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { NavLink, Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { LayoutDashboard, CalendarCheck, Users, Briefcase, Star, LogOut, Home } from "lucide-react";
+import { LayoutDashboard, CalendarCheck, Users, UserCircle, Briefcase, Star, LogOut, Home } from "lucide-react";
 import { ThemeProvider } from "@/components/lumen/ThemeProvider";
 import { ThemeToggle } from "@/components/lumen/ThemeToggle";
 import { Logo } from "@/components/lumen/Logo";
@@ -11,6 +11,7 @@ const navItems = [
   { to: "/admin", label: "نظرة عامة", icon: LayoutDashboard, end: true },
   { to: "/admin/bookings", label: "الحجوزات", icon: CalendarCheck },
   { to: "/admin/workers", label: "العاملات", icon: Users },
+  { to: "/admin/users", label: "المستخدمون", icon: UserCircle },
   { to: "/admin/services", label: "الخدمات", icon: Briefcase },
   { to: "/admin/customers", label: "العملاء والتقييمات", icon: Star },
 ];
