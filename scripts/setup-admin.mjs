@@ -27,8 +27,13 @@ function loadEnv() {
 }
 
 const env = loadEnv();
-const url = env.VITE_SUPABASE_URL || "https://riuiyhdcxzmnppqlyjpf.supabase.co";
+const url = env.VITE_SUPABASE_URL || env.SUPABASE_URL || "";
 const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!url) {
+  console.error("أضيفي VITE_SUPABASE_URL أو SUPABASE_URL إلى ملف .env");
+  process.exit(1);
+}
 
 if (!serviceKey) {
   console.error(

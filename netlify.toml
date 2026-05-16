@@ -2,8 +2,8 @@
   command = "npm run build"
   publish = "dist"
 
-# أضيفي في Netlify → Site configuration → Environment variables:
-# VITE_SUPABASE_URL و VITE_SUPABASE_PUBLISHABLE_KEY من مشروعك في Supabase
+# Supabase + GitHub يضيفان غالباً: SUPABASE_URL و SUPABASE_ANON_KEY
+# أو عيّني يدوياً: VITE_SUPABASE_URL و VITE_SUPABASE_PUBLISHABLE_KEY
 
 [[redirects]]
   from = "/*"
