@@ -95,3 +95,6 @@ if (userId) {
 }
 
 console.log("جاهز — سجّلي الدخول بكلمة المرور:", ADMIN_PASSWORD);
+console.log(
+  "لتسجيل فوري بدون تأكيد بريد: Supabase → Authentication → Email → عطّلي Confirm email",
+);

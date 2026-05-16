@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import type { User } from "@supabase/supabase-js";
 import { authErrorMessage, isAdminUser, upsertProfile } from "@/lib/auth-helpers";
+import { signUpAndEnter } from "@/lib/auth-signup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +26,12 @@ const Auth = () => {
     else navigate("/?tab=account", { replace: true });
   }, [user, loading, isAdmin, navigate]);
 
+  const afterAuth = (authUser: User) => {
+    toast.success(mode === "signup" ? "تم إنشاء الحساب!" : "تم تسجيل الدخول");
+    if (isAdminUser(authUser)) navigate("/admin", { replace: true });
+    else navigate("/?tab=account", { replace: true });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isSupabaseConfigured) {
@@ -34,24 +42,13 @@ const Auth = () => {
     setBusy(true);
     try {
       if (mode === "signup") {
-        const { data, error } = await supabase.auth.signUp({
-          email: email.trim(),
+        const { user: newUser } = await signUpAndEnter({
+          email,
           password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/auth`,
-            data: { full_name: fullName.trim() },
-          },
+          fullName,
+          phone,
         });
-        if (error) throw error;
-
-        if (data.session?.user) {
-          await upsertProfile(data.session.user, { full_name: fullName, phone });
-          toast.success("تم إنشاء الحساب!");
-          if (isAdminUser(data.session.user)) navigate("/admin", { replace: true });
-          else navigate("/?tab=account", { replace: true });
-        } else {
-          toast.success("تم إرسال رابط التأكيد إلى بريدك — بعد التأكيد سجّلي الدخول");
-        }
+        afterAuth(newUser);
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: email.trim(),
@@ -61,9 +58,7 @@ const Auth = () => {
         if (!data.user) throw new Error("تعذّر تسجيل الدخول");
 
         await upsertProfile(data.user, { full_name: fullName, phone });
-        toast.success("تم تسجيل الدخول");
-        if (isAdminUser(data.user)) navigate("/admin", { replace: true });
-        else navigate("/?tab=account", { replace: true });
+        afterAuth(data.user);
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "";
