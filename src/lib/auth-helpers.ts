@@ -53,7 +53,9 @@ export function authErrorMessage(message: string): string {
   if (m.includes("invalid login credentials")) return "البريد أو كلمة المرور غير صحيحة";
   if (m.includes("email not confirmed")) return "يرجى تأكيد البريد الإلكتروني من الرابط المرسل إليك";
   if (m.includes("user already registered")) return "هذا البريد مسجّل مسبقاً — جرّبي تسجيل الدخول";
-  if (m.includes("password")) return "كلمة المرور ضعيفة — استخدمي 6 أحرف على الأقل";
+  if (m.includes("weak") || m.includes("easy to guess"))
+    return "كلمة المرور ضعيفة جداً — اختاري كلمة أقوى";
+  if (m.includes("password")) return "كلمة المرور غير مقبولة — جرّبي 6 أحرف على الأقل";
   if (m.includes("network") || m.includes("fetch")) return "تعذّر الاتصال، حاولي لاحقاً";
   return "حدث خطأ، حاولي مرة أخرى";
 }
